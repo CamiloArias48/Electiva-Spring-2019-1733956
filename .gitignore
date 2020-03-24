@@ -1,3 +1,5 @@
 NFS/.vagrant
 mpi/openmpi/.vagrant
 mpi/openmpi/ubuntu-xenial-16.04-cloudimg-console.log
+mpi/mpiExample2/.vagrant
+mpi/mpiExample2/ubuntu-xenial-16.04-cloudimg-console.log
