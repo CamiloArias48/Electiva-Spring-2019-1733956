@@ -7,12 +7,13 @@
  
 #define MAXVECT 10
 #define MAXPROC 5
-#define imprimirvector(v,n) printf("Mi vista (%d) del vector\n",myrank); for (i = 0 ; i < n; i++) printf("[%d: %d] ",myrank,v[i]); printf("\n");
+#define imprimirvector(v,n) printf("Mi vista (%d) del vector, %s\n",myrank, hostname); for (i = 0 ; i < n; i++) printf("[%d: %d] ",myrank,v[i]); printf("\n");
 
 int main(int argc, char *argv[])
 {
     int myrank, worldsize;
     int i;
+    int a;
     int root;
     int vector[MAXVECT];
     int *rec_vector;
@@ -50,10 +51,14 @@ int main(int argc, char *argv[])
     //
     // (4)
     MPI_Scatter( vector, MAXVECT/worldsize, MPI_INT, rec_vector, MAXVECT/worldsize, MPI_INT, root, MPI_COMM_WORLD);
-    if (myrank == choosen) {
-      imprimirvector(rec_vector,MAXVECT/worldsize);
-	printf("finalizado-2 \n");
-    }
+	for(a=0; a< worldsize; a++) {
+	if (myrank == a) {
+      		imprimirvector(rec_vector,MAXVECT/worldsize);
+        	printf("finalizado-2 \n");
+    		}
+
+	}
+
     // Inserta la instruccion que termina el contexto de ejecucion de MPI
     //
     // (5)
