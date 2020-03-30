@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
       //imprimirvector
     //}
     if (myrank == 0) { // proceso con rango 0 inicializara el vector
-      for (i = 1; i < MAXVECT; i++) {
+      for (i = 0; i < MAXVECT; i++) {
         vector[i] = i;
 	}
 	for (a = 1; a < worldsize; a++) {
