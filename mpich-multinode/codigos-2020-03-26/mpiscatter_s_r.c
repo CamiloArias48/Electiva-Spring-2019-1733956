@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     int i,a,k;
     int tag = 0;
     int root;
-    int vector[MAXVECT];
+    int *vector;
     char hostname[HOST_NAME_MAX + 1];
     MPI_Status status;
 
@@ -33,9 +33,16 @@ int main(int argc, char *argv[])
 
 
     if (myrank == root) {
+
+	vector = (int*) malloc(sizeof(int)*MAXVECT);
+
+
 	for (i = 0; i < MAXVECT; i++) {
 		vector[i] = i;
 	}
+
+	imprimirvector(vector, MAXVECT);
+
  	for (a = 1; a < worldsize; a++) {
 
 		for (i = 0; i < MAXVECT/worldsize; i++) {
@@ -48,6 +55,9 @@ int main(int argc, char *argv[])
                 send_vector[i] = vector[(MAXVECT/worldsize)*myrank +i];
         }
         imprimirvector(send_vector, MAXVECT/worldsize);
+	free(vector);
+	vector = NULL;
+
      }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -62,4 +72,3 @@ int main(int argc, char *argv[])
     MPI_Finalize();
     return 0;
 }
-
