@@ -65,7 +65,10 @@ int main(int argc, char *argv[])
 
 	for (a = 1; a < worldsize; a++) {
 	  if (myrank == a) {
+		printf("\n antes de recivir: \n");
+		imprimirvector(scatter_vector, MAXVECT/worldsize);
 		MPI_Recv (&scatter_vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+		printf("\n despues de recivir: \n");
 		imprimirvector(scatter_vector, MAXVECT/worldsize);
 	  }
 	}
