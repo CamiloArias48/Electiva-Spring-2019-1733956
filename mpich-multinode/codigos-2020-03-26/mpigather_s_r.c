@@ -5,7 +5,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <time.h>
- 
+
 #define MAXVECT 10
 #define MAXPROC 5
 #define imprimirvector(v,n) printf("Mi vista (%d) del vector, \n",myrank); for (k = 0 ; k < n; k++) printf("[%d: %d] ",myrank,v[k]); printf("\n");
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
 	for (a = 1; a < worldsize; a++) {
 	  if (myrank == a) {
-		
+
 
         	        for (i = 0; i < MAXVECT/worldsize; i++) {
                         vector[i] = (MAXVECT/worldsize)*a +i;
@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
                         MPI_Send (&vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD);
 			imprimirvector(vector, MAXVECT/worldsize);
 			printf("enviando vector al proceso de rango 0 \n");
-        	
 
 	  }
 	}
