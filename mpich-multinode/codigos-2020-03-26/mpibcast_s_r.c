@@ -19,8 +19,7 @@ int main(int argc, char *argv[])
     char hostname[HOST_NAME_MAX + 1];
 
     gethostname(hostname, HOST_NAME_MAX + 1);
-    srand(time(NULL));
-    
+//    srand(time(NULL));
 
     MPI_Init(NULL, NULL);
 
@@ -29,7 +28,6 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 
 
-    
     if (myrank == 0) { // proceso con rango 0 inicializara el vector
       for (i = 0; i < MAXVECT; i++) {
         vector[i] = i;
@@ -44,7 +42,10 @@ int main(int argc, char *argv[])
     }
 	for (a = 1; a < worldsize; a++) {
 		if(myrank == a) {
+		printf("\n antes de recivir: \n");
+		imprimirvector
 		MPI_Recv (&vector, MAXVECT, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+		printf("\n despues de recivir: \n");
 		imprimirvector
 		}
     	}

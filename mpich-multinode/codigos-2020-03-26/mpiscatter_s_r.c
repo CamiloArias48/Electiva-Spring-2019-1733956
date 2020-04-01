@@ -5,7 +5,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <time.h>
- 
+
 #define MAXVECT 10
 #define MAXPROC 5
 #define imprimirvector(v,n) printf("Mi vista (%d) del vector, \n",myrank); for (k = 0 ; k < n; k++) printf("[%d: %d] ",myrank,v[k]); printf("\n");
