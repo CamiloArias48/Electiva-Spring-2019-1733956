@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	    if (myrank == root) {
 	    //puse esto porque no me estaba mostrando los valores reales del vector de la vista (0)
 	    //por alguna razon, al poner esto si lo empezo a mostrar correctamente
-	    printf("el promedio del proceso: %d es = %5.2f", myrank, send_prom);
+	    //printf("el promedio del proceso: %d es = %5.1f \n", myrank, send_prom);
             }
 	  }
 	}
