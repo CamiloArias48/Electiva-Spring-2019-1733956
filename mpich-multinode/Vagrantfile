@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+
+Vagrant.configure("2") do |config|
+  config.vm.define "master" do |openmpi|
+  	openmpi.vm.box = "ubuntu/xenial64"
+        openmpi.vm.network "private_network", ip: "172.19.250.100"
+	#openmpi.vm.provision "shell", path: "script-mpich.sh"
+	openmpi.vm.provision "shell", path: "script-hosts.sh"
+	openmpi.vm.provision "shell", path: "script-nfs-master.sh"
+	openmpi.vm.provision "shell", path: "script-sshd.sh"
+	openmpi.vm.provision "shell", path: "script-keygen.sh"
+        openmpi.vm.hostname = "master-mpi"
+  	openmpi.vm.provider :virtualbox do |vb|
+		vb.customize [ 'modifyvm', :id, '--memory', '512' ]
+		vb.customize [ 'modifyvm', :id, '--cpus', '1' ]
+		vb.customize [ 'modifyvm', :id, '--name', 'master-mpi' ]
+  	end
+  end
+
+      config.vm.define "node-1" do |node|
+          node.vm.box = "ubuntu/xenial64"
+          node.vm.network "private_network", ip: "172.19.250.101"
+          #node.vm.provision "shell", path: "script-mpich.sh"
+	  node.vm.provision "shell", path: "script-hosts.sh"
+	  node.vm.provision "shell", path: "script-nfs-client.sh"
+	  node.vm.provision "shell", path: "script-sshd.sh"
+          node.vm.hostname = "node-mpi-1"
+       	  node.vm.provider :virtualbox do |vb|
+      		vb.customize [ 'modifyvm', :id, '--memory', '512' ]
+      		vb.customize [ 'modifyvm', :id, '--cpus', '1' ]
+      		vb.customize [ 'modifyvm', :id, '--name', 'node-mpi.-1' ]
+          end
+      end
+   config.vm.define "node-2" do |node|
+          node.vm.box = "ubuntu/xenial64"
+          node.vm.network "private_network", ip: "172.19.250.102"
+          #node.vm.provision "shell", path: "script-mpich.sh"
+          node.vm.provision "shell", path: "script-hosts.sh"
+          node.vm.provision "shell", path: "script-nfs-client.sh"
+          node.vm.provision "shell", path: "script-sshd.sh"
+          node.vm.hostname = "node-mpi-2"
+          node.vm.provider :virtualbox do |vb|
+                vb.customize [ 'modifyvm', :id, '--memory', '512' ]
+                vb.customize [ 'modifyvm', :id, '--cpus', '1' ]
+                vb.customize [ 'modifyvm', :id, '--name', 'node-mpi.-2' ]
+          end
+      end
+
+end
