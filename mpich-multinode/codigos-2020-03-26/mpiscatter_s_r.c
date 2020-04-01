@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
     int i,a,k;
     int tag = 0;
     int root;
-    int *vector;
+//    int *vector;
+    int vector[MAXVECT];
     char hostname[HOST_NAME_MAX + 1];
     MPI_Status status;
 
@@ -29,12 +30,12 @@ int main(int argc, char *argv[])
 
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 
-    int send_vector[MAXVECT/worldsize];
+    int scatter_vector[MAXVECT/worldsize];
 
 
     if (myrank == root) {
 
-	vector = (int*) malloc(sizeof(int)*MAXVECT);
+//	vector = (int*) malloc(sizeof(int)*MAXVECT);
 
 
 	for (i = 0; i < MAXVECT; i++) {
@@ -46,17 +47,17 @@ int main(int argc, char *argv[])
  	for (a = 1; a < worldsize; a++) {
 
 		for (i = 0; i < MAXVECT/worldsize; i++) {
-			send_vector[i] = vector[(MAXVECT/worldsize)*a +i];
+			scatter_vector[i] = vector[(MAXVECT/worldsize)*a +i];
 		}
 
-	                MPI_Send (send_vector, MAXVECT/worldsize, MPI_INT, a, tag, MPI_COMM_WORLD);
+	                MPI_Send (&scatter_vector, MAXVECT/worldsize, MPI_INT, a, tag, MPI_COMM_WORLD);
 	}
 	for(i = 0; i < MAXVECT/worldsize; i++){
-                send_vector[i] = vector[(MAXVECT/worldsize)*myrank +i];
+                scatter_vector[i] = vector[(MAXVECT/worldsize)*myrank +i];
         }
-        imprimirvector(send_vector, MAXVECT/worldsize);
-	free(vector);
-	vector = NULL;
+        imprimirvector(scatter_vector, MAXVECT/worldsize);
+//	free(vector);
+//	vector = NULL;
 
      }
 
@@ -64,8 +65,8 @@ int main(int argc, char *argv[])
 
 	for (a = 1; a < worldsize; a++) {
 	  if (myrank == a) {
-		MPI_Recv (send_vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
-		imprimirvector(send_vector, MAXVECT/worldsize);
+		MPI_Recv (&scatter_vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+		imprimirvector(scatter_vector, MAXVECT/worldsize);
 	  }
 	}
 

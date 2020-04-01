@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     int i,a,k;
     int tag = 0;
     int root;
-//    int vector[MAXVECT];
+    int* recv_vector;
     char hostname[HOST_NAME_MAX + 1];
     MPI_Status status;
 
@@ -29,7 +29,8 @@ int main(int argc, char *argv[])
 
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 
-    int recv_vector[MAXVECT/worldsize];
+    recv_vector = (int*) malloc(sizeof(int)* MAXVECT);
+    int vector[MAXVECT/worldsize];
 
 
 	for (a = 1; a < worldsize; a++) {
@@ -37,11 +38,11 @@ int main(int argc, char *argv[])
 		
 
         	        for (i = 0; i < MAXVECT/worldsize; i++) {
-                        recv_vector[i] = (MAXVECT/worldsize)*a +i;
+                        vector[i] = (MAXVECT/worldsize)*a +i;
                 	}
 
-                        MPI_Send (recv_vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD);
-			imprimirvector(recv_vector, 2);
+                        MPI_Send (&vector, MAXVECT/worldsize, MPI_INT, 0, tag, MPI_COMM_WORLD);
+			imprimirvector(vector, MAXVECT/worldsize);
 			printf("enviando vector al proceso de rango 0 \n");
         	
 
@@ -50,22 +51,23 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////////////////////////////////////////////
     if (myrank == root) {
 
-        int      vector[MAXVECT];
 // ya que no puedo enviar mensages desde un proceso hacia el mismo, le paso los valores a las posiciones 0 y 1 de vector manualmente.
 	for (i = 0; i < MAXVECT/worldsize; i++) {
                         recv_vector[i] = (MAXVECT/worldsize)*myrank +i;
-			vector[i]= recv_vector[i];
                         }
 
         for (a = 1; a < worldsize; a++) {
 
-		MPI_Recv (recv_vector, MAXVECT/worldsize, MPI_INT, a, tag, MPI_COMM_WORLD, &status);
-		vector[a*2] = recv_vector[0];
-		vector[(a*2)+1] = recv_vector[1];
+		MPI_Recv (&vector, MAXVECT/worldsize, MPI_INT, a, tag, MPI_COMM_WORLD, &status);
+		recv_vector[a*2] = vector[0];
+		recv_vector[(a*2)+1] = vector[1];
         }
 	printf("el vector en el proceso de rango 0 ha recibido todos los vectores de los demas procesos \n");
-        imprimirvector(vector, 10);
+        imprimirvector(recv_vector, MAXVECT);
      }
+
+	free(recv_vector);
+	recv_vector = NULL;
 
 
     MPI_Finalize();

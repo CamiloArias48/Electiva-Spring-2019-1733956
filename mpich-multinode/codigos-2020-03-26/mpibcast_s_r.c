@@ -7,7 +7,7 @@
 
 #define MAXVECT 10
 #define MAXPROC 5
-#define imprimirvector printf("Mi vista (%d) del vector\n",myrank); for (i = 0 ; i < MAXVECT; i++) printf("[%d: %d] ",myrank,vector[i]); printf(" terminado \n");
+#define imprimirvector printf("Mi vista (%d) del vector\n",myrank); for (i = 0 ; i < MAXVECT; i++) printf("[%d: %d] ",myrank,vector[i]);printf("\n");
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     gethostname(hostname, HOST_NAME_MAX + 1);
     srand(time(NULL));
-    //int choosen = (rand()%MAXPROC);
+    
 
     MPI_Init(NULL, NULL);
 
@@ -29,17 +29,18 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 
 
-    //if (myrank == choosen) {
-      //imprimirvector
-    //}
+    
     if (myrank == 0) { // proceso con rango 0 inicializara el vector
       for (i = 0; i < MAXVECT; i++) {
         vector[i] = i;
 	}
 	for (a = 1; a < worldsize; a++) {
-		MPI_Send (&vector, MAXVECT, MPI_INT, a, tag, MPI_COMM_WORLD);
-		//imprimirvector
+
+	MPI_Send (&vector, MAXVECT, MPI_INT, a, tag, MPI_COMM_WORLD);
+
 	}
+	imprimirvector
+
     }
 	for (a = 1; a < worldsize; a++) {
 		if(myrank == a) {
